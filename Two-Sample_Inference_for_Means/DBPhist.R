@@ -1,0 +1,5 @@
+par(mfrow=c(2,2))
+hist(HealthExam$DiasBP[HealthExam$Sex == "M"], main="Males",xlab="mmHg")
+hist(HealthExam$DiasBP[HealthExam$Sex == "F"], main="Females",xlab="mmHg")
+qqnorm(HealthExam$DiasBP[HealthExam$Sex == "M"])
+qqnorm(HealthExam$DiasBP[HealthExam$Sex == "F"])

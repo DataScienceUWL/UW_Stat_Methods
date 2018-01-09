@@ -1,0 +1,135 @@
+- Class: meta
+  Course: Statistical_Methods
+  Lesson: T_Confidence_Intervals
+  Author: Jeff Baggett
+  Type: Standard
+  Organization: University of Wisconsin - La Crosse
+  Version: 2.3.0
+
+- Class: text
+  Output:  The Student's or Gosset's t distribution is useful for building t confidence interval estimates of the population mean when the sample data is from an approximately normally distributed random variable.
+
+- Class: text
+  Output:  We will use the t-interval to estimate the population mean height of American women based on the sample data in the HealthExam data set.  The random sample of 40 women's heights (in inches) has already been stored in the variable wh for you.
+
+- Class: cmd_question
+  Output: Use hist() to plot a histogram of the women's height data (wh).  
+  CorrectAnswer: hist(wh)
+  AnswerTests: omnitest(correctExpr='hist(wh)')
+  Hint: type hist(wh) at the command prompt.
+
+- Class: mult_question
+  Output: Based on the histogram, does it seem reasonable to assume that this sample of women's heights is from a random variable that is normally distributed?  Remember, the histogram doesn't need to be exactly symmetric and bell-shaped, but it shouldn't be dramatically skewed or have many outliers.
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: The distribution of the sample data is roughly symmetric and bell-shaped so it would be OK to assume that the data is sampled from a normally distributed random variable.
+
+- Class: text
+  Output: The command t.test(x,conf.level=.92)$conf.int would make a 92% confidence interval estimate of the population mean corresponding to the sample data x.
+
+- Class: cmd_question
+  Output: Use the construction above to compute a 95% confidence interval estimate of the population mean American women's height (the sample data is stored in wh).  conf.level is set to .95 by default, but go ahead and include it.
+  CorrectAnswer: t.test(wh,conf.level=.95)$conf.int
+  AnswerTests: omnitest(correctExpr='t.test(wh,conf.level=.95)$conf.int')
+  Hint: Type t.test(wh,conf.level=.95)$conf.int
+
+- Class: mult_question
+  Output: If the confidence level is increased to .99 what do you think will happen to the width of the interval?
+  AnswerChoices: it will be larger; it will be smaller; it will remain the same
+  CorrectAnswer: it will be larger
+  AnswerTests: omnitest(correctVal='it will be larger')
+  Hint: A larger confidence level means larger critical values so according to the formula mean +/- tcrit * sd / sqrt(n) ...
+
+- Class: cmd_question
+  Output: Verify that the 99% confidence interval will be wider than the 95% interval by computing the 99% interval for the population means height of American women.  Don't forget the $conf.int to specify that you only want to see the interval.  Recall that the 95% CI was ( 62.31831, 64.07169)
+  CorrectAnswer: t.test(wh,conf.level=.99)$conf.int
+  AnswerTests: omnitest(correctExpr='t.test(wh,conf.level=.99)$conf.int')
+  Hint: Type t.test(wh,conf.level=.99)$conf.int
+
+- Class: text
+  Output:  Occasionally it is necessary to compute a confidence interval from summary statistics instead of raw data.  There are two ways to do this.  One is to reproduce the formula and use R as a calculator.  Another way is to create a data set that has the same statistics and then use a built-in command to compute the interval.
+
+- Class: text
+  Output:  We'll recompute the 95% CI for the population mean women's height.  The sample mean is about 63.20 and the sample standard deviation is about 2.74.  Now pretend that the sample data doesn't exist and you need to compute the CI.
+
+- Class: text
+  Output:  Recall that the formula for the CI is mean +/- t_(1-alpha/2) * sd / sqrt(n)  where t_(1-alpha/2) is the critical value or quantile from a t-distribution with n-1 degrees of freedom that has cumulative probability 1-alpha/2.  For a 95% CI we have alpha = 1 - .95 = .05.  
+
+- Class: text
+  Output:  The sample of women's heights has 40 observations.  So we need the the t critical value with cumulative probability 1-alpha/2 = 1-.05/2 = .975.
+
+- Class: cmd_question
+  Output: "Recall that the command qt(.8,20) gives the .8 quantile from a t-distribution with 20 degrees of freedom.  To compute the critical value, find the appropriate .975 quantile and assign it to tcrit (hint:  tcrit <- qt(...) )"
+  CorrectAnswer: tcrit <- qt(.975,39)
+  AnswerTests: omnitest(correctExpr='tcrit <- qt(.975,39)')
+  Hint: Type tcrit <- qt(.975,39)
+
+- Class: cmd_question
+  Output: Now use the construction xbar + c(-1,1) * tcrit * s / sqrt(n) to compute the 95% CI.  Recall that the sample mean is about 63.2 and the sample standard deviation is about 2.74 and there are 40 observations.  You've already stored the critical value in tcrit so just use that variable.
+  CorrectAnswer: 63.2 + c(-1,1) * tcrit * 2.74 / sqrt(40)
+  AnswerTests: omnitest(correctExpr='63.2 + c(-1,1) * tcrit * 2.74 / sqrt(40)')
+  Hint: Type 63.2 + c(-1,1) * tcrit * 2.74 / sqrt(40)
+
+- Class: text
+  Output: Except for small differences caused by rounding the sample statistics this is the same as the interval we computed from the raw data which was ( 62.31831, 64.07169).
+
+- Class: text
+  Output: I prefer the second approach mentioned previously.  If we know that the sample mean is 63.2 and the sample standard deviation is 2.74, then create a fake data set that has these statistics and then use t.test on the fake data.  This approach can be used all over the place and is worth learning.
+
+- Class: cmd_question
+  Output: Since we need a sample of 40 observations, start by using rnorm(40) and assigning it the variable fakeData.  This will draw 40 observations from the standard normal so the sample mean should be about 0 and the standard deviation will be about 1.  
+  CorrectAnswer: fakeData <- rnorm(40)
+  AnswerTests: omnitest(correctExpr='fakeData <- rnorm(40)')
+  Hint: Type fakeData <- rnorm(40)
+
+- Class: text
+  Output: Recall that computing a z-score, or standardizing, an observation x was done with (x-mean)/sd.   A z-score measures how many standard deviations away from the mean x is.  If we have a vector x we can standardize the whole vector using the construction (x-mean(x))/sd(x).  This new vector will have mean 0 and standard deviation 1.
+
+- Class: cmd_question
+  Output: Standardize the fakeData vector and store the result back in fakeData.
+  CorrectAnswer: fakeData <- (fakeData - mean(fakeData))/sd(fakeData)
+  AnswerTests: omnitest(correctExpr='fakeData <- (fakeData - mean(fakeData))/sd(fakeData)')
+  Hint: Try this ... fakeData <- (fakeData - mean(fakeData))/sd(fakeData)
+
+- Class: cmd_question
+  Output: Use the mean() command to verify that the vector fakeData now has mean 0 (or at least a very tiny number like 1.0e-16 or something)
+  CorrectAnswer: mean(fakeData)
+  AnswerTests: omnitest(correctExpr='mean(fakeData)')
+  Hint: Just type mean(fakeData) to compute the sample mean.
+
+- Class: cmd_question
+  Output: Similarly, use sd() to verify that the standard deviation of fakeData is now 1.
+  CorrectAnswer: sd(fakeData)
+  AnswerTests: omnitest(correctExpr='sd(fakeData)')
+  Hint: Type sd(fakeData) to compute the sample standard deviation.
+
+- Class: text
+  Output:  Now we have to ''de-standardize'' the vector fakeData to have the desired mean and standard deviation.  Suppose x is a standardized vector with mean=0 and sd=1.  The vector 3*x + 5 would have mean=5 and sd=3 (we are rescaling by 3 and shifting by 5).  
+
+- Class: cmd_question
+  Output: "De-standardize fakeData to have mean 63.2 and standard deviation 2.74 and store the result back in fakeData (hint: fakeData <- 2.74* ...)"
+  CorrectAnswer: fakeData <- 2.74*fakeData + 63.2
+  AnswerTests: omnitest(correctExpr='fakeData <- 2.74*fakeData + 63.2')
+  Hint: Just copy and paste this if you're having trouble fakeData <- 2.74*fakeData + 63.2
+
+- Class: cmd_question
+  Output:  Use mean() to verify the sample mean of fakeData is 63.2.
+  CorrectAnswer: mean(fakeData)
+  AnswerTests: omnitest(correctExpr='mean(fakeData)')
+  Hint: mean(fakeData)
+
+- Class: cmd_question
+  Output: Again, use sd() to verify that the sample standard deviation is 2.74.
+  CorrectAnswer: sd(fakeData)
+  AnswerTests: omnitest(correctExpr='sd(fakeData)')
+  Hint: sd(fakeData)
+
+- Class: text
+  Output:  "The fake sample can be computed all in one line like this: z <- rnorm(40); fakeData <- 2.74*(z-mean(z))/sd(z) + 63.2.  This is a useful trick that can be used in many places."
+
+- Class: cmd_question
+  Output: Now apply t.test() to fakeData with conf.level=.95.  To get only the interval, type $conf.int immediately after the command.  The interval should be the same as it was when you recreated the formula ( 62.32371, 64.07629).
+  CorrectAnswer: t.test(fakeData,conf.level=.95)$conf.int
+  AnswerTests: omnitest(correctExpr='t.test(fakeData,conf.level=.95)$conf.int')
+  Hint: here ya go ... t.test(fakeData,conf.level=.95)$conf.int

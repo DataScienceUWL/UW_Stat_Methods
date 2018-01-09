@@ -1,0 +1,158 @@
+- Class: meta
+  Course: DS705
+  Lesson: Inference for Paired Data
+  Author: Dave Reineke
+  Type: Standard
+  Organization: University of Wisconsin - La Crosse
+  Version: 2.2.01
+
+#1
+- Class: text
+  Output: This lesson will cover statistical inference procedures for paired data (also called matched pairs). Obseved data values are considered paired or matched when two dependent measurements are recorded for each experimental unit.  Paired data is commonly obtained as "Before vs After" or "Method A vs Method B." 
+
+#2
+- Class: text
+  Output: The Cryotherapy data set contains an agility measurement (in sec) for 18 college students with a measurement taken prior to cryotherapy and another at 17 minutes after cryotherapy in a cold whilrpool for each person.  The "before" and "after" measurements of agility are not independent because each data pair (before & after) is taken from the same individual. 
+
+#3
+- Class: cmd_question
+  Output: In the Cryotherapy data set, the variable called Precryotherapy contains the agility measured before the cyrotherapy for each individual in the sample and the variable After17Min contains the agility measured 17 minutes after the cyrotherapy session.  Since the data set has been loaded with this lesson, you can see some of it in the Global Environment window.  To see a description of this data set, type ?Cryotherapy a the command prompt.  (NOTE you can also type 'skip()' at any time to bypass a task). 
+  CorrectAnswer: ?Cryotherapy
+  AnswerTests:  omnitest(correctExpr='?Cryotherapy')
+  Hint: Type ?Cryotherapy at the command prompt
+
+#4
+- Class: text
+  Output: Suppose our research objective is to determine if cryotherapy (cold whirlpool) has an effect on agility.  One way to determine this is to see if a difference exists in the central values for agility before and after cryotherapy.  Our first thought should be to choose a paired data t-test to compare the population mean difference to 0.  If we are conviced that we have sample that represents our population if interest, we would examine a boxplot and a histogram to assess the normality of the underying population of differences.
+
+#5
+- Class: cmd_question
+  Output: If the data pairs are arranged in separate columns, as they are in this data frame, the differences in sample values must be found.  Enter diff<-After17Min-Precryotherapy at the command prompt.
+  CorrectAnswer: diff<-After17Min-Precryotherapy
+  AnswerTests:  omnitest(correctExpr='diff<-After17Min-Precryotherapy')
+  Hint: Type or paste diff<-After17Min-Precryotherapy at the command prompt.
+
+#6
+- Class: cmd_question
+  Output: Create a boxplot for the differences.  Type what you think the correct code is at the command prompt.  If it is incorrect, I'll show you how.
+  CorrectAnswer: boxplot(diff)
+  AnswerTests:  omnitest(correctExpr='boxplot(diff)')
+  Hint: Type or paste boxplot(diff) at the command prompt.  You don't need to identify the data set here because it was "attached" when this lesson was initiated.
+
+#7
+- Class: mult_question
+  Output: Take a look a the boxplot in your Plots window. How would you describe the sample?
+  AnswerChoices: Relatively symmetric with no outiers; Skewed with outliers
+  CorrectAnswer: Relatively symmetric with no outiers
+  AnswerTests: omnitest(correctVal='Relatively symmetric with no outiers')
+  Hint: Are there any circles beyond the whiskers on either end of the boxplot?  Is it stretched out in one particular direction?
+
+#8
+- Class: cmd_question
+  Output: Create a histogram for the differences.  Type what you think the correct code is at the command prompt.  If it is incorrect, I'll show you how.
+  CorrectAnswer: hist(diff)
+  AnswerTests:  omnitest(correctExpr='hist(diff)')
+  Hint: Type or paste hist(diff) at the command prompt.  You don't need to identify the data set here because it was "attached" when this lesson was initiated.
+
+#9
+- Class: mult_question
+  Output: Take a look a the histogram in your Plots window. How would you describe the sample?
+  AnswerChoices: Looks pretty normal; Doesn't look normal at all; Hard to tell from the graph
+  CorrectAnswer: Hard to tell from the graph
+  AnswerTests: omnitest(correctVal='Hard to tell from the graph')
+  Hint: It can be difficult to assess normality for small samples so don't let it bother you.
+
+#10
+- Class: cmd_question
+  Output: Conduct a Shapiro-Wilk test for normality for the population of differences.  Type what you think the correct code is at the command prompt.  If it is incorrect, I'll show you how.
+  CorrectAnswer: shapiro.test(diff)
+  AnswerTests:  omnitest(correctExpr='shapiro.test(diff)')
+  Hint: Type or paste shapiro.test(diff) at the command prompt.
+
+#11
+- Class: mult_question
+  Output: At a 10% level of significance, would the null hypothesis of normality be rejected for the population of differences?  Recall that the null hypothesis is that the sample comes from a normally distributed population (vs the alternative that is does not).
+  AnswerChoices: yes; no
+  CorrectAnswer: no
+  AnswerTests: omnitest(correctVal='no')
+  Hint: Since the p-value is more than 0.10, the null hypothesis is not rejected and the population of differences can be considered to be normally distributed.
+
+#12
+- Class: text
+  Output: If we are comfortable making the assumption that the sample of 18 individuals in the study represents our population of interest, and our examination of plots and the normality test show us that the assumption of normality in the underlying population of differences is not unreasonable, then we have the green light to use the paired data t-test to compare the population mean of differences to 0 and construct a CI for it as well.
+
+#13
+- Class: cmd_question
+  Output: The paired t-test and t-interval is obtained using the t.test function in R with the option paired=TRUE.  Type t.test(Precryotherapy,After17Min,paired=TRUE) at the command prompt.
+  CorrectAnswer: t.test(Precryotherapy,After17Min,paired=TRUE)
+  AnswerTests:  omnitest(correctExpr='t.test(Precryotherapy,After17Min,paired=TRUE)')
+  Hint: Type or paste t.test(Precryotherapy,After17Min,paired=TRUE) at the command prompt.
+
+#14
+- Class: mult_question
+  Output: At a 5% level of significance, is agility affected by cryotherapy at 17 minutes? 
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: Since the p-value is more than 0.05, the null hypothesis is rejected and the population mean of the differences is different from 0.
+
+#15
+- Class: mult_question
+  Output: Which has a higher population mean, agility before cryotherapy or agility at 17 minutes after cryptherapy? 
+  AnswerChoices: Agility before cryotherapy; Agility at 17 minutes after cryptherapy
+  CorrectAnswer: Agility at 17 minutes after cryptherapy
+  AnswerTests: omnitest(correctVal='Agility at 17 minutes after cryptherapy')
+  Hint: You must consider the resulting confidence interval and the order of subtraction (which matches the order that the variables are entered into the function, so here it is Precryotherapy - After17Min, so a negative answer implies that After17Min is larger).  
+
+#16
+- Class: text
+  Output: Since the conditions for the paired t-test and interval were met here, we can be satisfied in the outcome of our procedure.  But for the sake of demonstrating the Wilcoxon signed rank test, which is used to compare a population median to 0.  We'll continue with this data set.
+
+#17
+- Class: cmd_question
+  Output: The Wilcoxon signed rank is similarly obtained using the wilcox.test function in R with the option paired=TRUE.  Type wilcox.test(Precryotherapy,After17Min,paired=TRUE) at the command prompt.
+  CorrectAnswer: wilcox.test(Precryotherapy,After17Min,paired=TRUE)
+  AnswerTests:  omnitest(correctExpr='wilcox.test(Precryotherapy,After17Min,paired=TRUE)')
+  Hint: Type or paste wilcox.test(Precryotherapy,After17Min,paired=TRUE) at the command prompt.
+
+#18
+- Class: cmd_question
+  Output: The wilcox.test function can also produce a condifence interval for the median by entering wilcox.test(Precryotherapy,After17Min,paired=TRUE,conf.int=TRUE) at the command prompt.
+  CorrectAnswer: wilcox.test(Precryotherapy,After17Min,paired=TRUE,conf.int=TRUE)
+  AnswerTests:  omnitest(correctExpr='wilcox.test(Precryotherapy,After17Min,paired=TRUE,conf.int=TRUE)')
+  Hint: Type or paste wilcox.test(Precryotherapy,After17Min,paired=TRUE,conf.int=TRUE) at the command prompt.
+
+#19
+- Class: text
+  Output: Nevermind the warning messages here.  But notice the similarity in the output for the paired t-test and the Wilcoxon signed rank test with this sample.
+
+#20
+- Class: text
+  Output: There is another very basic nonparametric test for comparing an unknown population median to a hypothetical value.  It is called the sign test.  It only has the data condition that the sample is randomly selected (so that the sample adequately represents the population of interest).  
+
+#21
+- Class: text
+  Output: The sign test essentially tests that the proportion of values in the population that are above the hypothesized median is 0.5, since by definition, half the values in a distribution fall above (or below) the median.  This test only requires that the sample is randomly selected, but generally has a lower power than the t-test and Wilcoxon signed rank test.
+
+#22
+- Class: text
+  Output: With paired data, the null hypothesis is typically that the median in the population is 0 and the binomial distribution is used to find the probability of observing at least as many positive (or negative) values in the sample as what is observed in the current sample, when the success probability is 0.5.  Differences of zero are omitted, since they provide no evidence against the null hypothesis.
+
+#23
+- Class: cmd_question
+  Output: The sign test for our sample of differences in the Cryotherapy data can be conducted by entering signmedian.test(diff,mu=0) at the command prompt.
+  CorrectAnswer: signmedian.test(diff,mu=0)
+  AnswerTests:  omnitest(correctExpr='signmedian.test(diff,mu=0)')
+  Hint: Type or paste signmedian.test(diff,mu=0) at the command prompt.
+
+#24
+- Class: text
+  Output: Take note of the p-value and how it compares to the p-values of the t and Wilcoxon tests for this sample.  Note also that is provides a confidence interval for the population median (which is based on percentiles from the binomial distribution with success probability 0.5).
+
+#25
+- Class: cmd_question
+  Output: Enter ?signmedian.test at the command prompt to read more about this test.
+  CorrectAnswer: ?signmedian.test
+  AnswerTests:  omnitest(correctExpr='?signmedian.test')
+  Hint: Type or paste ?signmedian.test at the command prompt.
+

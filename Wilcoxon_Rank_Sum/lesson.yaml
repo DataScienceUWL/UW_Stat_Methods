@@ -1,0 +1,287 @@
+- Class: meta
+  Course: DS705
+  Lesson: Wilcoxon Rank Sum
+  Author: Dave Reineke
+  Type: Standard
+  Organization: University of Wisconsin - La Crosse
+  Version: 2.2.0
+
+#1
+- Class: text
+  Output: This lesson will cover the Wilcoxon rank sum test and a confidence interval for a difference of population medians.
+
+#2
+- Class: text
+  Output: The HealthExam data set contains systolic blood pressure (in mmHg) for independent, random samples of adult males and females in the US.  
+
+#3
+- Class: cmd_question
+  Output: In the HealthExam data set, the variable called SysBP contains the systolic blood pressure for each individual in the sample and the variable Sex contains the identifier for males and females.  Since the data set has been loaded with this lesson, you can see some of it in the Global Environment window.  To see a description of this data set, type ?HealthExam a the command prompt.  (NOTE you can also type 'skip()' at any time to bypass a task). 
+  CorrectAnswer: ?HealthExam
+  AnswerTests:  omnitest(correctExpr='?HealthExam')
+  Hint: Type ?HealthExam at the command prompt
+
+#4
+- Class: text
+  Output: Suppose our research objective is to determine if a difference exists in the central values for systolic blood pressure between males and females.  Our first thought would be to choose either the pooled or Welch t-test to compare population means.  In either case, we would examine boxplots and histograms to assess the normality of the underying populations.
+
+#5
+- Class: text
+  Output: Recall that normality can assessed in R graphically by generating boxplot (to look for outliers & skewness), histograms (to look for skewness), and/or normal probability plots (to assess normality itself) and numerically by the Shapiro-Wilk test for normality.
+
+#6
+- Class: figure
+  Output: Boxplots for the systolic BP values for the samples of males and females have been created.  
+  Figure: SBPboxplots.R
+  FigureType: new
+
+#7
+- Class: mult_question
+  Output: Take a look a the boxplots in your Plots window. Does either sample have outliers?
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: Are there any circles beyond the whiskers on either end of either boxplot?
+
+#8
+- Class: figure
+  Output: Histograms and normal probability plots (Q-Q) plots for the diastolic BP values for the samples of males and females have been created.  
+  Figure: SBPhist.R
+  FigureType: new
+
+#9
+- Class: mult_question
+  Output: Take a look a the histograms and Q-Q plots in your Plots window. Would you say the samples are a little skewed?
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: You may need to review the lesson on assessing normality if you don't know what to say here.
+
+#10
+- Class: cmd_question
+  Output: A visual inspection of graphs is a good start when assessing normality, but it is subjective.  A more objective criterion is to use the Shapiro-Wilk hypothesis test for normality.  The R function is shapiro.test.  Type shapiro.test(HealthExam$SysBP[HealthExam$Sex=="M"]) at the command prompt to test the normality of the diastolic BP for all males in the US.  You can also simply copy the command from this sentence and paste it at the command prompt.
+  CorrectAnswer: shapiro.test(HealthExam$SysBP[HealthExam$Sex=="M"])
+  AnswerTests:  omnitest(correctExpr='shapiro.test(HealthExam$SysBP[HealthExam$Sex=="M"])')
+  Hint: Type shapiro.test(HealthExam$SysBP[HealthExam$Sex=="M"]) at the command prompt.
+
+#11
+- Class: mult_question
+  Output: At a 5% level of significance, the would the null hypothesis of normality be rejected for the systolic BP of males?  Recall that the null hypothesis is that the sample comes from a normally distributed population (vs the alternative that is does not).
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: Since the p-value is less than 0.05, the null hypothesis is rejected.
+
+#12
+- Class: cmd_question
+  Output: Type shapiro.test(HealthExam$SysBP[HealthExam$Sex=="F"]) at the command prompt to test the normality of the diastolic BP for all females in the US.  (or hit the up arrow and simply change the M to an F in your previous entry)
+  CorrectAnswer: shapiro.test(HealthExam$SysBP[HealthExam$Sex=="F"])
+  AnswerTests:  omnitest(correctExpr='shapiro.test(HealthExam$SysBP[HealthExam$Sex=="F"])')
+  Hint: Type or paste shapiro.test(HealthExam$SysBP[HealthExam$Sex=="F"]) at the command prompt.
+
+#13
+- Class: mult_question
+  Output: At a 5% level of significance, the would the null hypothesis of normality be rejected for the systolic BP of females?
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: Since the p-value is less than 0.05, the null hypothesis is rejected.  The assumption of normality is not substantiated here.
+
+#14
+- Class: text
+  Output: The data conditions for the Wilcoxon rank sum test are that the samples are independent and randomly selected from two populations with the same shape.  The Wilcoxon rank sum test is not a test to compare means, but rather a test to compare location as measured by the median, or simply saying that one distribution is shifted from the other.
+
+#15
+- Class: mult_question
+  Output: Looking back at the histograms, is it reasonable to consider that there two random samples were drawn from populations with the same shape?
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: You can't expect perfection from random samples, but they are both skewed in the same direction.
+
+#16
+- Class: cmd_question
+  Output: To conduct the Wilcoxon rank sum test, type or copy & paste wilcox.test(SysBP~Sex,data=HealthExam) at the command prompt to compare the distributons of systolic BP for all males vs females in the US.  
+  CorrectAnswer: wilcox.test(SysBP~Sex,data=HealthExam)
+  AnswerTests:  omnitest(correctExpr='wilcox.test(SysBP~Sex,data=HealthExam)')
+  Hint: Type or paste wilcox.test(SysBP~Sex,data=HealthExam) at the command prompt.
+
+#17
+- Class: text
+  Output: Don't be bothered by the warning message about not getting an exact p-value with ties in the sample. It is safe to use the p-value given. 
+
+#18
+- Class: mult_question
+  Output: At a 10% level of significance, what would the proper conclusion be to the Wilcoxon rank sum hypothesis test?
+  AnswerChoices: Do not reject H0, the distributions are the same; Reject H0, the distributions are different
+  CorrectAnswer: Reject H0, the distributions are different
+  AnswerTests: omnitest(correctVal='Reject H0, the distributions are different')
+  Hint: Note that the p-value is less than the level of significance.
+
+#19
+- Class: cmd_question
+  Output: The default option is to NOT include the confidence interval for the median.  However, if a confidence interval is desired, insert the option conf.int=TRUE in the wilcox.test function syntax. If a confidence level other than 0.95 is desired, use the option conf.level=0.90, for example. Run the Wilcoxon test again and ask for a 90% confidence interval.
+  CorrectAnswer: wilcox.test(SysBP~Sex,data=HealthExam,conf.int=TRUE,conf.level=0.90)
+  AnswerTests:  omnitest(correctExpr='wilcox.test(SysBP~Sex,data=HealthExam,conf.int=TRUE,conf.level=0.90)')
+  Hint: Type or paste wilcox.test(SysBP~Sex,data=HealthExam,conf.int=TRUE,conf.level=0.90) at the command prompt.
+
+#20
+- Class: cmd_question
+  Output: The default option is for a two-tailed test.  Meaning that the alternative hypothesis says that one distribution is shifted from the other, but doesn't specify a particular direction.  If a one-tailed test is desired, for example, to test if the systolic BP distribution for females is shifted to the left of the distribution for males, insert the option alternative="less" in the wilcox.test function syntax.  
+  CorrectAnswer: wilcox.test(SysBP~Sex,data=HealthExam,alternative="less")
+  AnswerTests:  omnitest(correctExpr='wilcox.test(SysBP~Sex,data=HealthExam,alternative="less")')
+  Hint: Type or copy wilcox.test(SysBP~Sex,data=HealthExam,alternative="less") at the command prompt.
+
+
+#21
+- Class: cmd_question
+  Output: For comparison (and a little extra practice), run a Welch t-test to compare the population means of systolic BP for US males and females.  
+  CorrectAnswer: t.test(SysBP~Sex,data=HealthExam)
+  AnswerTests:  omnitest(correctExpr='t.test(SysBP~Sex,data=HealthExam)')
+  Hint: Type or paste t.test(SysBP~Sex,data=HealthExam) at the command prompt.
+
+#22
+- Class: mult_question
+  Output: At a 10% level of significance, what would the proper conclusion be to the Welch t-test?
+  AnswerChoices: Do not reject H0, the population means are the same; Reject H0, the population means are different
+  CorrectAnswer: Reject H0, the population means are different
+  AnswerTests: omnitest(correctVal='Reject H0, the population means are different')
+  Hint: Note that the p-value is less than the level of significance.
+
+#23
+- Class: text
+  Output: Notice that we come to the same conclusion!  This really is not uncommon, especially when the skewness is not severe and the sample sizes are large (both are 80).  Although the t-test has the data requirement that the populations are (approximately) normal, it is "robust" to this condition and still performs well unless the skewness or outliers are severe, even in cases like this when the Shapiro-Wilk test detected deviation from normality in both samples.
+
+#24
+- Class: text
+  Output: Let's look at an example where the skewness is more severe and we're dealing with smaller samples sizes.  
+
+#25
+- Class: cmd_question
+  Output: To make this a little easier, well create new vectors from the HealthExam data on cholesterol for two of the age groups.  To get the cholesterol measures for the 18 to 35 age group, at the command prompt type or paste chol.young<-HealthExam$Cholesterol[HealthExam$AgeGroup=="18-35"]
+  CorrectAnswer: chol.young<-HealthExam$Cholesterol[HealthExam$AgeGroup=="18-35"]
+  AnswerTests:  omnitest(correctExpr='chol.young<-HealthExam$Cholesterol[HealthExam$AgeGroup=="18-35"]')
+  Hint: Type or paste chol.young<-HealthExam$Cholesterol[HealthExam$AgeGroup=="18-35"] at the command prompt.
+
+#26
+- Class: cmd_question
+  Output: To get the cholosterol measures for the 36 to 65 age group, at the command prompt type or paste chol.mid<-HealthExam$Cholesterol[HealthExam$AgeGroup=="36-65"]
+  CorrectAnswer: chol.mid<-HealthExam$Cholesterol[HealthExam$AgeGroup=="36-65"]
+  AnswerTests:  omnitest(correctExpr='chol.mid<-HealthExam$Cholesterol[HealthExam$AgeGroup=="36-65"]')
+  Hint: Type or paste chol.mid<-HealthExam$Cholesterol[HealthExam$AgeGroup=="36-65"] at the command prompt.
+
+#27
+- Class: figure
+  Output: Boxplots for the cholosterol for the samples for age groups 18-35 and 36-65 have been created.  
+  Figure: cholboxplots.R
+  FigureType: new
+
+#28
+- Class: mult_question
+  Output: Take a look a the boxplots in your Plots window. Does either sample have outliers?
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: Are there any circles beyond the whiskers on either end of either boxplot?
+
+#29
+- Class: figure
+  Output: Histograms and normal probability plots (Q-Q) plots for the choloesterol levels for the samples for age groups 18-35 and 36-65 have been created.  
+  Figure: cholhist.R
+  FigureType: new
+
+#30
+- Class: mult_question
+  Output: Take a look a the histograms and Q-Q plots in your Plots window. Are both samples relatively symmetric and mound-shaped?
+  AnswerChoices: yes; no
+  CorrectAnswer: no
+  AnswerTests: omnitest(correctVal='no')
+  Hint: They are both heality skewed to the right.
+
+#31
+- Class: cmd_question
+  Output: The severe skewness in the graphs should be enough to conclude that the populations are not normal, but just to be thorough, we'll look at the Shapiro-Wilk test for each, too.  Type shapiro.test(chol.young) at the command prompt to test the normality of the cholesterol level for all people in the 18 to 35 age group in the US.  
+  CorrectAnswer: shapiro.test(chol.young)
+  AnswerTests:  omnitest(correctExpr='shapiro.test(chol.young)')
+  Hint: Type shapiro.test(chol.young) at the command prompt.
+
+#32
+- Class: mult_question
+  Output: At a 5% level of significance, the would the null hypothesis of normality be rejected for the choloesterol of the 18 to 35 age group?  Note how much smaller the p-value is for this sample than for the systolic BP samples.
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: Since the p-value is less than 0.05, the null hypothesis is rejected.  
+
+#33
+- Class: cmd_question
+  Output: Notice also that the p-value for this sample is quite small. Now enter shapiro.test(chol.mid) at the command prompt to test the normality of the choloesterol levels for all people in the 36 to 65 age group in the US.  
+  CorrectAnswer: shapiro.test(chol.mid)
+  AnswerTests:  omnitest(correctExpr='shapiro.test(chol.mid)')
+  Hint: Type or paste shapiro.test(chol.mid) at the command prompt.
+
+#34
+- Class: mult_question
+  Output: At a 5% level of significance, the would the null hypothesis of normality be rejected for the choloesterol for the 36 to 65 age group?
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: Since the p-value is much less than 0.05, the null hypothesis is rejected.  The assumption of normality is not a good one here.
+
+#35
+- Class: cmd_question
+  Output: To conduct the Wilcoxon rank sum test for data in two separate vectors, enter wilcox.test(chol.young,chol.mid,conf.int=TRUE) at the command prompt to compare the distributon of cholesterol levels for all people in the age group 18-35 to those oin the 36-65 age group in the US.  
+  CorrectAnswer: wilcox.test(chol.young,chol.mid,conf.int=TRUE)
+  AnswerTests:  omnitest(correctExpr='wilcox.test(chol.young,chol.mid,conf.int=TRUE)')
+  Hint: Type or paste wilcox.test(chol.young,chol.mid,conf.int=TRUE) at the command prompt.
+
+#36
+- Class: mult_question
+  Output: At a 10% level of significance, what would the proper conclusion be to the Wilcoxon rank sum hypothesis test?
+  AnswerChoices: Do not reject H0, the distributions are the same; Reject H0, the distributions are different
+  CorrectAnswer: Reject H0, the distributions are different
+  AnswerTests: omnitest(correctVal='Reject H0, the distributions are different')
+  Hint: Note that the p-value is less than the level of significance.
+
+#37
+- Class: cmd_question
+  Output: Let's look at the Welch t-test to compare the population means of cholesterol level for these same populations of age groups. Enter the appropriate code at the command prompt now. 
+  CorrectAnswer: t.test(chol.young,chol.mid)
+  AnswerTests:  omnitest(correctExpr='t.test(chol.young,chol.mid)')
+  Hint: Type or paste t.test(chol.young,chol.mid) at the command prompt.
+
+#38
+- Class: mult_question
+  Output: At a 10% level of significance, what would the proper conclusion be to the Welch t-test?
+  AnswerChoices: Do not reject H0, the distributions are the same; Reject H0, the distributions are different
+  CorrectAnswer: Do not reject H0, the distributions are the same
+  AnswerTests: omnitest(correctVal='Do not reject H0, the distributions are the same')
+  Hint: Note that the p-value is NOT less than the level of significance.
+
+#39
+- Class: text
+  Output: Notice that the procedures come to different conclusions this time.  When the underlying distributions are not normal, the power of the t-tests to detect differences in population means decreases while the power of the Wilcoxon test holds relatively constant, provided that the distributions have approximately the same shape.
+
+#40
+- Class: text
+  Output: This explains why the null hypothesis was rejected in the Wilcoxon test (higher power to detect differences in location) while the null hypithesis was not rejected in the t-test (not enough power to see the difference in means).
+
+#41
+- Class: cmd_question
+  Output: If you're curous about how the pooled t-test performs for these samples, give it a try here.  Enter t.test(chol.young,chol.mid,var.equal=TRUE) at the command prompt.
+  CorrectAnswer: t.test(chol.young,chol.mid,var.equal=TRUE)
+  AnswerTests:  omnitest(correctExpr='t.test(chol.young,chol.mid,var.equal=TRUE)')
+  Hint: Type or paste t.test(chol.young,chol.mid,var.equal=TRUE) at the command prompt.
+
+#42
+- Class: text
+  Output: You see that it is very similar to the Welch t-test.  Not surprising, since it also loses power when the underlying distributions are highly skewed.
+
+
+#43
+- Class: text
+  Output: Procedures that rely on normal distributons (like the Welch and pooled t-tests and intervals) are called "parametric" procedures.  Procedures like the Wilcoxon rank sum test are called "nonparametric" or "distribution-free" procedures because they do not require the underlying distributions to follow a particular distributional family.
+
+#44
+- Class: text
+  Output: Closing thought!  For many data sets, the Wilcoxon rank sum test will agree with the t-tests.  However, when they disagree you should use the outcome of the t-tests when the underlying data is approximately normal, since t-tests have more power for normally distributed data, provided that the other conditions are met as well.  If the underlying disrtibutions are clearly non-normal, then use the outcome of the Wilcoxon test, provided that the other conditions are met.  

@@ -1,0 +1,6 @@
+x=seq(-4,4,length=200)
+y=dnorm(x)
+plot(x,y,type="l", lwd=2, col="blue",xlab="z",ylab="density")
+x=seq(-4,1.3,length=200)
+y=dnorm(x)
+polygon(c(-4,x,1.3),c(0,y,0),col="gray")

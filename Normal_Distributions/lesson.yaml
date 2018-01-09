@@ -1,0 +1,129 @@
+- Class: meta
+  Course: DS705
+  Lesson: Normal Distribution Probability Calculations
+  Author: Jeff Baggett
+  Type: Standard
+  Organization: University of Wisconsin - La Crosse
+  Version: 2.3.0
+
+# 1
+- Class: text
+  Output: In this lesson we will review how to compute probabilities associated with normal probability distributions. 
+
+# 2
+- Class: figure
+  Output: In the standard normal distribution with mean = 0 and standard deviation = 1, the probability that a measurement z is below 1.3 corresponds to the shaded area underneath the density curve and to the left of 1.3.
+  Figure: shaded1.R
+  FigureType: new
+
+#3
+- Class: cmd_question
+  Output: The command for computing the cumulative probability, corresponding to the area under the density curve is called pnorm.  In R this is called a distribution function.  To get more information about the pnorm() function, type ?pnorm.  Give it a try.
+  CorrectAnswer: ?pnorm
+  AnswerTests: omnitest(correctExpr='?pnorm')
+  Hint: Type ?pnorm and press Enter. This will bring up the help file for the pnorm() function.
+
+#4
+- Class: text
+  Output: 'Notice you got more information than simply a description of the pnorm function.  You should have gotten information about all of the functions associatied with the normal probability distribution: dnorm, pnorm, qnorm, rnorm.'
+
+#5
+- Class: text
+  Output:  In the help information for pnorm we see that the form of the command is pnorm(q, mean = 0, sd = 1, lower.tail = TRUE, log.p = FALSE).  The values after each = sign are the default values that are used if a different value is not specified.  So to find the probability of a measurement less than -0.6 in the standard normal distribution (mean = 0, sd = 1), we can simply type pnorm(-0.6) which yields 0.2742531.
+
+#6
+- Class: cmd_question
+  Output:  In the standard normal distribution, with mean = 0 and standard deviation = 1, use pnorm to compute the probability that a measurement is less than 1.3. 
+  CorrectAnswer: pnorm(1.3)
+  AnswerTests:  omnitest(correctExpr='pnorm(1.3)')
+  Hint:  Type pnorm(1.3) and press Enter.  Since we want to work with the standard normal distibution we can use the default values of mean = 0, sd = 1.
+
+#7
+- Class: figure
+  Output: In a normal probability distribution with mean = 20 and sd = 2, the probability that a measurement is less than 17 is shown here in the figure.
+  Figure: shaded2.R
+  FigureType: new
+
+#8
+- Class: cmd_question
+  Output: Now compute the probability shown as the shaded area, that is, in a normal probability distribution with mean = 20 and sd = 2, compute the probability that a measurement is less than 17.
+  CorrectAnswer: pnorm(17, mean = 20, sd = 2)
+  AnswerTests: omnitest(correctExpr='pnorm(17, mean = 20, sd = 2)')
+  Hint:  Use the pnorm command again, but this time you need to specify the mean and sd, e.g. pnorm(17, mean = 20, sd = 2)
+
+#9
+- Class: text
+  Output:  By default pnorm yields the cumulative probability of measurements below (or to the left of or less than) the measurement you specify.  If you want to find the probability of measurements that are greater than the specified value, you need to add lower.tail = FALSE as an additional argument to pnorm.  For instance pnorm(1.3, lower.tail = FALSE) finds the probability of measurements greater than 1.3 in the standard normal distribution.
+
+#10
+- Class: figure
+  Output: In a normal probability distribution with mean = 20 and sd = 2, the probability that a measurement is greater than 21 is shown here in the figure. 
+  Figure: shaded3.R
+  FigureType: new
+
+#11
+- Class: cmd_question
+  Output: Now compute the probability shown as the shaded area, that is, in a normal probability distribution with mean = 20 and sd = 2, compute the probability that a measurement is greater than 21.   Use lower.tail=FALSE to compute the probability of the upper tail.
+  CorrectAnswer: pnorm(21, mean = 20, sd = 2, lower.tail = FALSE)
+  AnswerTests: omnitest(correctExpr='pnorm(21, mean = 20, sd = 2, lower.tail = FALSE)',correctVal=0.308537538725987)
+  Hint:  Use the pnorm command again and in addition to specifying mean = 20, sd = 2, you have to tell it to compute the area of the upper tail, e.g. pnorm(21, mean = 20, sd = 2, lower.tail = FALSE)
+
+#12
+- Class: cmd_question
+  Output: Another approach to computing a right-tailed probability is take advantage of the fact that the total probability, or total area beneath the density curve is 1.  So the probability of a measurement greater than 21 is 1 subtract the probability of a measurement less than 21.  Try it here (keep mean = 20, sd = 2, and since you want the area of the lower tail you want to leave out lower.tail=FALSE).
+  CorrectAnswer: 1 - pnorm(21, mean = 20, sd = 2)
+  AnswerTests: omnitest(correctExpr='1-pnorm(21, mean = 20, sd = 2)')
+  Hint: Type 1 - pnorm(21, mean = 20, sd = 2)
+
+#13
+- Class: figure
+  Output: If we want the probability of measurements between two values we'll have to subtract two probabilities.  For instance, in a normal probability distribution with mean = 20, sd = 2 the probability of a measurement between 17 and 21 is shown in the figure.
+  Figure: shaded4.r
+  FigureType: new
+
+#14
+- Class: cmd_question
+  Output: Find the probability of a measurement between 17 and 21 by first computing the probability of measurments less than 21 and subtracting the probability of measurments less than 17.  Your answer should be something like pnorm(stuff)-pnorm(other stuff).
+  CorrectAnswer: pnorm(21, mean = 20, sd = 2) - pnorm(17, mean = 20, sd = 2)
+  AnswerTests: omnitest(correctExpr='pnorm(21, mean = 20, sd = 2) - pnorm(17, mean = 20, sd = 2)')
+  Hint:  Type pnorm(21, mean = 20, sd = 2) - pnorm(17, mean = 20, sd = 2).
+
+#15
+- Class: cmd_question
+  Output:  Often we want to reverse these calculations.  For instance, suppose we want to find the 10th percentile of a normal distribution.  That is, we want to find the value of the measurement so that the probability of being less than that measurement is 10% or 0.10.  In R, this is done with the quantile function (quantiles are a generalization of percentiles) qnorm.  Use the construction with ? to look up help for the qnorm function now.
+  CorrectAnswer: ?qnorm
+  AnswerTests: omnitest(correctExpr='?qnorm')
+  Hint: Type ?qnorm
+
+#16
+- Class: figure
+  Output: For instance, the 10th percentile in the standard normal distribution (mean = 0, sd = 1 ) corresponds to identifying the value of z for which the area to the left of z is 0.1.  In this figure, we are seeking the value of z along the horizontal axis for which the shaded area is 0.1.  It look like the 10th percentile is a value between -1 and -1.5.  Sometimes this point is also referred to as a quantile, e.g. Q(.1).
+  Figure: shaded5.r
+  FigureType: new
+
+#17
+- Class: cmd_question
+  Output:  Use qnorm with mean = 0, sd = 1 (these are the defaults so you don't have to type them) to find the 10th percentile of the standard normal distribution.  That is, find the z score with area 0.1 to its left.
+  CorrectAnswer: qnorm(0.1)
+  AnswerTests: omnitest(correctExpr='qnorm(0.1)')
+  Hint: Type qnorm(0.1)
+
+#18
+- Class: figure
+  Output:  More generally we can find the quantile corresponding to any cumulative probability.  For instance, in the normal distribution with mean = 20 and sd = 2, we can find the measurement which has cumulative probability (area to the left) 0.5831 by using qnorm and specifying the mean and standard deviation.  According to the figure, the value of the measurment is about 20.5.
+  Figure: shaded6.r
+  FigureType: new
+
+#19 
+- Class: cmd_question
+  Output: Try it.  Set mean = 20, sd = 2, and use qnorm to find the value of the measurement x so that the cumulative problability below x is 0.5831.
+  CorrectAnswer: qnorm(.5831, mean  = 20, sd = 2)
+  AnswerTests: omnitest(correctExpr='qnorm(.5831, mean  = 20, sd = 2)')
+  Hint: Type qnorm(.5831, mean  = 20, sd = 2)
+
+#20
+- Class: cmd_question
+  Output: An analysis of income tax returns from the previous year indicates that for a given income classification, the amount of money owed to the government over and above the amount paid in the estimated tax vouchers for the first three payments is approximately normally distributed with a mean of $530 and a standard deviation of $205. Find the 75th percentile for this distribution of measurements. The government wants to target that group of returns having the largest 25% of amounts owed.  Use qnorm to compute the 75th percentile of the amount owed.
+  CorrectAnswer: qnorm(.75,mean=530,sd=205)
+  AnswerTests: omnitest(correctExpr='qnorm(.75,mean=530,sd=205)')
+  Hint:  Since we want the largest 25%, we need to compute the 75th percentile.  Set mean = 530 and sd = 205, like this qnorm(.75, mean = 530, sd = 205)

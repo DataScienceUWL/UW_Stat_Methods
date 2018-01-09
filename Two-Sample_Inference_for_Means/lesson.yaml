@@ -1,0 +1,163 @@
+- Class: meta
+  Course: DS705
+  Lesson: Two-Sample_Inference_for_Means
+  Author: Dave Reineke
+  Type: Standard
+  Organization: University of Wisconsin - La Crosse
+  Version: 2.2.0
+
+#1
+- Class: text
+  Output: This lesson will cover the separate-variance (aka unpooled or Welsh's) t-interval & t-test, the pooled (aka Student's) t-interval & t-test, also making use of the Shapiro test for assessing normality of the population and the Levene test for assessing equal population variance. 
+
+#2
+- Class: text
+  Output: The HealthExam data set contains diastolic blood pressure (in mmHg) for independent, random samples of adult males and females in the US  Assume for now that diastolic blood pressure values are from normally distributed populations.  
+
+#3
+- Class: cmd_question
+  Output: In the HealthExam data set, the variable called DiasBP contains the diastolic blood pressure for each individual in the sample and the variable Sex contains the identifier for males and females.  Since the data set has been loaded with this lesson, you can see some of it in the Global Environment window.  To see a description of this data set, type ?HealthExam a the command prompt.  (NOTE you can also type 'skip()' at any time to bypass a task). 
+  CorrectAnswer: ?HealthExam
+  AnswerTests:  omnitest(correctExpr='?HealthExam')
+  Hint: Type ?HealthExam at the command prompt
+
+#4
+- Class: cmd_question
+  Output: Construct a 95% Welch t-interval to estimate the difference in population means. Use the R function t.test.  Only the confidence interval is needed so use type t.test(DiasBP~Sex,data=HealthExam)$conf.  Do this now.
+  CorrectAnswer: t.test(DiasBP~Sex,data=HealthExam)$conf
+  AnswerTests:  omnitest(correctExpr='t.test(DiasBP~Sex,data=HealthExam)$conf')
+  Hint: Type t.test(DiasBP~Sex,data=HealthExam)$conf at the command prompt. The "$conf" at the end will restrict the output to only the CI and suppress the hypothesis test output.
+
+#5
+- Class: text
+  Output: There is more to the t.test command than what meets the eye.  The defaults are set to the separate-variance (Welch) t-intervals for two samples and a 95% confidence level, among other things, so if nothing is specified, that is what you get.    
+
+#6
+- Class: cmd_question
+  Output: This time construct a 90% Welch t-interval to estimate the difference in population means. Use the option "conf.level=0.90"" to adjust the level of confidence in the t.test function. Remember that you can bring up previous commands for editing at the command prompt using the up arrow.  Do this now.
+  CorrectAnswer: t.test(DiasBP~Sex,data=HealthExam, conf.level=0.90)$conf
+  AnswerTests:  omnitest(correctExpr='t.test(DiasBP~Sex,data=HealthExam, conf.level=0.90)$conf')
+  Hint: Type t.test(DiasBP~Sex,data=HealthExam, conf.level=0.90)$conf at the command prompt.
+
+#7
+- Class: text
+  Output: Notice that the 90% CI is not as wide as the 95% interval.  There are mathematical and common sense reasons for that, which are covered elsewhere.  I merely wanted you to notice.
+
+#8
+- Class: cmd_question
+  Output: The pooled t-interval can be computed with the option "var.equal=TRUE". Use it to compute a 95% pooled CI for the difference in population means (you can leave out the "conf.level" option this time, since 95% is the defalult). Do this now.
+  CorrectAnswer: t.test(DiasBP~Sex,data=HealthExam, var.equal=TRUE)$conf
+  AnswerTests:  omnitest(correctExpr='t.test(DiasBP~Sex,data=HealthExam, var.equal=TRUE)$conf')
+  Hint: Type t.test(DiasBP~Sex,data=HealthExam, var.equal=TRUE)$conf at the command prompt.
+
+#9
+- Class: text
+  Output: Notice that the pooled t-interval is very similar to the Welch t-interval for the same level of confidence.  This is usually the case.
+
+#10
+- Class: cmd_question
+  Output: Suppose our goal was simply to compare the population means, rather than to estimate their difference.  This can be done using a separate-variance (Welch) t-test by typing t.test(DiasBP~Sex,data=HealthExam) at the command prompt.   Do this now.
+  CorrectAnswer: t.test(DiasBP~Sex,data=HealthExam)
+  AnswerTests:  omnitest(correctExpr='t.test(DiasBP~Sex,data=HealthExam)')
+  Hint: Type t.test(DiasBP~Sex,data=HealthExam) at the command prompt.
+
+#11
+- Class: text
+  Output: Note that the default output is again for the Welch t-test and also that in addition to the test statistic, degrees of freedom, and p-value, R gives the CI as well as the sample means.  There is also a note regarding which alternative hypothesis was used, with the two-tailed hypothesis being the default. 
+
+#12
+- Class: mult_question
+  Output: At a 5% level of significance, the would the null hypothesis of equal population means be rejected?  
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: Since the p-value of 0.01628 is less than 0.05, the null hypothesis is rejected and we conclude that the population mean diastiloc BP is different for US adult males and females.
+
+#13
+- Class: cmd_question
+  Output: For a one-tailed Welch t-test, type t.test(DiasBP~Sex,data=HealthExam,alternative="less") at the command prompt. I chose "less" because I saw that the females had a lower sample mean and that they were listed first - this is also why the CI less than 0.  Do this now.
+  CorrectAnswer: t.test(DiasBP~Sex,data=HealthExam,alternative="less")
+  AnswerTests:  omnitest(correctExpr='t.test(DiasBP~Sex,data=HealthExam,alternative="less")')
+  Hint: Type t.test(DiasBP~Sex,data=HealthExam,alternative="less") at the command prompt.
+
+#14
+- Class: text
+  Output: Notice that the p-value this time is exactly half as large as for the two-tailed test.  Also, instead of a confidence interval, R provides a corresponding "confidence bound" - which is a one-sided version of a confidence interval.  
+
+#15
+- Class: cmd_question
+  Output: For a two-tailed pooled t-test, type t.test(DiasBP~Sex,data=HealthExam,var.equal=TRUE) at the command prompt.   Do this now.
+  CorrectAnswer: t.test(DiasBP~Sex,data=HealthExam,var.equal=TRUE)
+  AnswerTests:  omnitest(correctExpr='t.test(DiasBP~Sex,data=HealthExam,var.equal=TRUE)')
+  Hint: Type t.test(DiasBP~Sex,data=HealthExam,var.equal=TRUE) at the command prompt. 
+
+#16
+- Class: text
+  Output: Comparing this output with that for the two-tailed Welch t-test, note the slight differences the values for the test statistic, df, and p-value.  You may also notice that for this sample data the differences between the two procedures are not very large.  It is not uncommon fo for the pooled and unpooled t-tests to yield the same results.
+
+#17
+- Class: text
+  Output: Remember that both the Welch and pooled t-procedures have the condition that the population values are normally distributed.  This condition can assessed in R graphically by generating boxplot (to look for outliers & skewness), histograms (to look for skewness), and/or normal probability plots (to assess normality itself) and numerically by the Shapiro-Wilk test for normality.
+
+#18
+- Class: figure
+  Output: Boxplots for the diastolic BP values for the samples of males and females have been created.  
+  Figure: DBPboxplots.R
+  FigureType: new
+
+#19
+- Class: mult_question
+  Output: Take a look a the boxplots in your Plots window. Does either sample have outliers?
+  AnswerChoices: yes; no
+  CorrectAnswer: no
+  AnswerTests: omnitest(correctVal='no')
+  Hint: Are there any circles beyond the whiskers on either end of either boxplot?
+
+#20
+- Class: figure
+  Output: Histograms and normal probability plots (Q-Q) plots for the diastolic BP values for the samples of males and females have been created.  
+  Figure: DBPhist.R
+  FigureType: new
+
+#21
+- Class: mult_question
+  Output: Take a look a the histograms and Q-Q plots in your Plots window. Are both samples relatively symmetric and mound-shaped?
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: Don't be too hasty to declare a distribution to be skewed because the t-intervals are robust, meaning that they can tolerate some non-normality.
+
+#22
+- Class: cmd_question
+  Output: A visual inspection of graphs is a good start when assessing normality, but it is subjective.  A more objective criterion is to use the Shapiro-Wilk hypothesis test for normality.  The R function is shapiro.test.  Type shapiro.test(HealthExam$DiasBP[HealthExam$Sex=="M"]) at the command prompt to test the normality of the diastolic BP for all males in the US.  
+  CorrectAnswer: shapiro.test(HealthExam$DiasBP[HealthExam$Sex=="M"])
+  AnswerTests:  omnitest(correctExpr='shapiro.test(HealthExam$DiasBP[HealthExam$Sex=="M"])')
+  Hint: Type shapiro.test(HealthExam$DiasBP[HealthExam$Sex=="M"]) at the command prompt.
+
+#23
+- Class: mult_question
+  Output: At a 5% level of significance, the would the null hypothesis of normality be rejected for the diastolic BP of males?  Recall that the null hypothesis is that the sample comes from a normally distributed population (vs the alternative that is does not).
+  AnswerChoices: yes; no
+  CorrectAnswer: no
+  AnswerTests: omnitest(correctVal='no')
+  Hint: Since the p-value of 0.2517 is greater than 0.05, the null hypothesis is not rejected.
+
+#24
+- Class: cmd_question
+  Output: Type shapiro.test(HealthExam$DiasBP[HealthExam$Sex=="F"]) at the command prompt to test the normality of the diastolic BP for all females in the US.  (or hit the up arrow and simply change the M to an F in your previous entry)
+  CorrectAnswer: shapiro.test(HealthExam$DiasBP[HealthExam$Sex=="F"])
+  AnswerTests:  omnitest(correctExpr='shapiro.test(HealthExam$DiasBP[HealthExam$Sex=="F"])')
+  Hint: Type shapiro.test(HealthExam$DiasBP[HealthExam$Sex=="F"]) at the command prompt.
+
+#25
+- Class: mult_question
+  Output: At a 5% level of significance, the would the null hypothesis of normality be rejected for the diastolic BP of females?
+  AnswerChoices: yes; no
+  CorrectAnswer: no
+  AnswerTests: omnitest(correctVal='no')
+  Hint: Since the p-value of 0.2876 is greater than 0.05, the null hypothesis is not rejected.
+
+#30
+- Class: text
+  Output: This concludes the lesson.
+

@@ -1,0 +1,113 @@
+- Class: meta
+  Course: DS705
+  Lesson: Multiple Regression
+  Author: Dave Reineke
+  Type: Standard
+  Organization: University of Wisconsin - La Crosse
+  Version: 2.2.0
+
+#1
+- Class: text
+  Output: Let's go over some of the basics of multiple linear regression.  The HealthExam data set has been loaded and will be used to demonstrate a number of functions useful in multiple regression.  (Recall, you can type 'skip()' at any time to bypass a task, enter play() to put swirl on hold and experiment in R for while, enter nxt() to get back to the lesson).
+
+#2
+- Class: cmd_question
+  Output: In regression, it is beneficial to look at plots first if at all possible.  Suppose we want to examine a multiple regression model to predict weight from height, waist, and systolic blood pressure. Enter pairs(Weight~Height+Waist+SysBP,data=HealthExam) at the command prompt to create a scatterplot matrix.  
+  CorrectAnswer: pairs(Weight~Height+Waist+SysBP,data=HealthExam)
+  AnswerTests:  omnitest(correctExpr='pairs(Weight~Height+Waist+SysBP,data=HealthExam)')
+  Hint: Type or paste pairs(Weight~Height+Waist+SysBP,data=HealthExam) at the command prompt
+
+#3
+- Class: text
+  Output: Since the response variable is in the top row, that is a good place to look first to see if there might be any linear relationships between weight and the other three variables. It is also a good idea to see if any of the potential predictor variables may be strongly related, in which case we would have a collinearity problem. Take a look at the plot, then proceed.
+  
+#4
+- Class: cmd_question
+  Output: To make a correlation matrix for these variables, we'll first pull just those variables from the data frame and put them in a matrix in order to avoid creating correlation matrix for all the variables in the set, which could be very large.  Enter mat <- cbind(HealthExam$Weight,HealthExam$Height,HealthExam$Waist,HealthExam$SysBP) at the prompt. 
+  CorrectAnswer: mat <- cbind(HealthExam$Weight,HealthExam$Height,HealthExam$Waist,HealthExam$SysBP)
+  AnswerTests:  omnitest(correctExpr='mat <- cbind(HealthExam$Weight,HealthExam$Height,HealthExam$Waist,HealthExam$SysBP)')
+  Hint: Enter mat <- cbind(HealthExam$Weight,HealthExam$Height,HealthExam$Waist,HealthExam$SysBP) at the command prompt. 
+  
+#5
+- Class: cmd_question
+  Output: To get the correlation matrix, enter cor(mat) at the prompt. 
+  CorrectAnswer: cor(mat)
+  AnswerTests:  omnitest(correctExpr='cor(mat)')
+  Hint: Enter cor(mat) at the command prompt.
+
+#6
+- Class: text
+  Output: Note that we entered the variables so that they appear in the same order in the correlation matrix as in the scatterplot matrix. Are any correlations in the first row "large?" What about any of the other ones?  Is this what you expected from what you saw in the scatterplot matrix?  I'm not actually asking you to enter an answer - I just want you to think about these things.  When you're done thinking, press <enter>.
+
+#7
+- Class: cmd_question
+  Output: Let's get to the regression!  To fit the first order linear model and store the output in an object, enter fit <- lm(Weight~Height+Waist+SysBP,HealthExam) at the command prompt.  
+  CorrectAnswer: fit <- lm(Weight~Height+Waist+SysBP,HealthExam)
+  AnswerTests:  omnitest(correctExpr='fit <- lm(Weight~Height+Waist+SysBP,HealthExam)')
+  Hint: Type or paste fit <- lm(Weight~Height+Waist+SysBP,HealthExam) at the command prompt.
+
+#8
+- Class: cmd_question
+  Output: To see the output for this model, enter summary(fit) at the command prompt.  You may need to scroll up to check out the p-values for each coefficient, the Multiple R-squared, and the Adjusted R-squared.  I love this part!
+  CorrectAnswer: summary(fit)
+  AnswerTests:  omnitest(correctExpr='summary(fit)')
+  Hint: Type summary(fit) at the command prompt.
+
+#9
+- Class: cmd_question
+  Output: Confidence intervals for the parameter estimates can be obtained by entering confint(fit) at the command prompt.  Go for it.  
+  CorrectAnswer: confint(fit)
+  AnswerTests:  omnitest(correctExpr='confint(fit)')
+  Hint: Type confint(fit) at the command prompt.
+
+#10
+- Class: cmd_question
+  Output: Suppose we want use this model to estimate the mean weight for all adults in the U.S. who are 65 inches in height, have an 80 cm waist circumference, and systolic BP of 115.  A new data frame for this set of values for the independent variable need to be made.  Do this by entering newdata <- data.frame(Height=65,Waist=80,SysBP=115) at the command prompt.
+  CorrectAnswer: newdata <- data.frame(Height=65,Waist=80,SysBP=115)
+  AnswerTests:  omnitest(correctExpr='newdata <- data.frame(Height=65,Waist=80,SysBP=115)')
+  Hint: Type or paste newdata <- data.frame(Height=65,Waist=80,SysBP=115) at the command prompt.
+  
+#11
+- Class: cmd_question
+  Output: A confidence interval for the mean response for all adults in the U.S. who are 65 inches in height, have an 80 cm waist circumference, and systolic BP of 115 mm Hg can be found by entering predict.lm(fit,newdata,interval="confidence").
+  CorrectAnswer: predict.lm(fit,newdata,interval="confidence")
+  AnswerTests:  omnitest(correctExpr='predict.lm(fit,newdata,interval="confidence")')
+  Hint: Enter predict.lm(fit,newdata,interval="confidence") at the command prompt.
+
+#12
+- Class: cmd_question
+  Output: A prediction interval for the future individual response for a randomly selected adult in the U.S. who is 65 inches in height, has an 80 cm waist circumference, and systolic BP of 115 mmHg can be found by entering predict.lm(fit,newdata,interval="prediction").
+  CorrectAnswer: predict.lm(fit,newdata,interval="prediction")
+  AnswerTests:  omnitest(correctExpr='predict.lm(fit,newdata,interval="prediction")')
+  Hint: Enter predict.lm(fit,newdata,interval="prediction") at the command prompt.
+  
+#13
+- Class: text
+  Output: The function to produce confidence and prediction intervals can be applied to the entire data set simply by typing predict.lm(fit,interval="confidence") or predict.lm(fit,interval="predict").  Not now, though.  Let's move on to the next thing - hit <enter>. 
+
+#14
+- Class: text
+  Output: In order to test a subset of the independent variables, store the output for the "full" and "reduced" each in their own objects, then use the anova function.  We'll use the object we've already created as the full model.
+  
+#15
+- Class: cmd_question
+  Output: Suppose we want to test the the coefficients of Height and SysBP are both not zero.  The reduced model, if those coefficients were indeed both zero, would be obtained as fit2 <- lm(Weight~Waist,data=HealthExam).  Enter this code at the command prompt now. 
+  CorrectAnswer: fit2 <- lm(Weight~Waist,data=HealthExam)
+  AnswerTests:  omnitest(correctExpr='fit2 <- lm(Weight~Waist,data=HealthExam)')
+  Hint: Enter fit2 <- lm(Weight~Waist,data=HealthExam) at the command prompt.
+
+#16
+- Class: cmd_question
+  Output: To test the full model against the reduced model, enter anova(fit,fit2) at the command prompt.
+  CorrectAnswer: anova(fit,fit2)
+  AnswerTests:  omnitest(correctExpr='anova(fit,fit2)')
+  Hint: Enter anova(fit,fit2) at the command prompt.
+  
+#17
+- Class: text
+  Output: According to that p-value, at least one of the coefficients is not zero.
+
+#18
+- Class: text
+  Output: And we have come to the end of another magnificent lesson.  Farewell!
+

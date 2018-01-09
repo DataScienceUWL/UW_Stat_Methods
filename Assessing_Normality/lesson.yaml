@@ -1,0 +1,170 @@
+- Class: meta
+  Course: Statistical_Methods
+  Lesson: Assessing_Normality
+  Author: Jeff Baggett
+  Type: Standard
+  Organization: University of Wisconsin - La Crosse
+  Version: 2.3.0
+
+- Class: text
+  Output: It is often important to judge whether or not a data set is well-modeled by a normal distribution.  Sometimes this is called a normality test.  In this lesson you'll see how to use descriptive statistics to test normality.  Later in the course, you'll learn about statistical inference procedures for testing normality.
+
+- Class: figure
+  Output: For instance, the normal distribution is a good model for the men's height data in the HealthExam data set.  See your plot window for a histogram with a fitted normal density curve.
+  Figure: histogram1.R
+  FigureType: new or add
+
+- Class: text
+  Output: In this lesson, you'll look at the systolic and diastolic blood pressures for women from the HealthExam data set.  This data is already loaded for you, but you'll have to extract the data for just the women first.
+
+- Class: text
+  Output: For instance, to extract all the cases from the  dataframe df for which the factor Color is "purple" we would type dfpurple <- subset(df,df$Color=="purple").  This creates a new, smaller dataframe, dfpurple, with only the cases that have Color=="purple".
+
+- Class: cmd_question
+  Output: Now we want to extract all the data for females from the HealthExam dataframe.  Use subset to extract those cases for which Sex=="F".  Assign the result to hf. (Note the two equal signs used for conditional expressions ==)
+  CorrectAnswer: hf <- subset(HealthExam,HealthExam$Sex=="F")
+  AnswerTests: omnitest(correctExpr='hf <- subset(HealthExam,HealthExam$Sex=="F")')
+  Hint: For males the command would look like this hm <- subset(HealthExam,HealthExam$Sex=="M")
+
+- Class: cmd_question
+  Output: Look at the first few rows of the new dataframe hf, by using head(hf)
+  CorrectAnswer: head(hf)
+  AnswerTests: omnitest(correctExpr='head(hf)')
+  Hint: Type head(hf)
+
+- Class: cmd_question
+  Output: Note the variables DiasBP and SysBP.  To simplify exploration assign the vector hf$DiasBP to the variable fd.
+  CorrectAnswer: fd <- hf$DiasBP
+  AnswerTests: omnitest(correctExpr='fd<-hf$DiasBP')
+  Hint: Type fd <- hf$DiasBP
+
+- Class: cmd_question
+  Output: Now assign the vector hf$SysBP to the variable fs.
+  CorrectAnswer: fs <- hf$SysBP
+  AnswerTests: omnitest(correctExpr='fs<-hf$SysBP')
+  Hint: Type fs <- hf$SysBP
+
+- Class: text
+  Output: Now you're going to examine the female systolic blood pressure data to see if the normal distribution is a good fit.  Start by looking at outliers.  A quick way to examine data for outliers is to make a boxplot.
+
+- Class: cmd_question
+  Output: Make a boxplot for the female systolic blood pressure (diastolic doesn't have any outliers) by applying boxplot() to fs.
+  CorrectAnswer: boxplot(fs)
+  AnswerTests: omnitest(correctExpr='boxplot(fs)')
+  Hint: Type boxplot(fs)
+
+- Class: cmd_question
+  Output: How many observations are outliers? (type a number)
+  CorrectAnswer: 1
+  AnswerTests: omnitest(correctVal=1)
+  Hint: How many dots are there in the boxplot?  You should see 1.
+
+- Class: text
+  Output: Now you know there is one clear outlier in the female systolic blood pressure data.  Is that OK?  Could a normal distribution still be a good model for this data?
+
+- Class: text
+  Output: In a normal distribution, the 1.5 IQR rule condition is equivalent to saying an observation is an outlier if it is more than 2.7 standard deviations away from the mean.  The probability a randomly sampled observation is more than 2.7 standard deviations away from the mean is 0.00693.
+
+- Class: text
+  Output: This means that about 1 in every 143 observations from a normal distribution is an outlier by the 1.5 IQR rule.  So seeing one outlier among the systolic blood pressures of our 40 randomly selected women wouldn't be that unusual if the data came from a normal distribution.  
+
+- Class: text
+  Output: The usual practice for using standard deviations to determine outliers is to say an observation is an outlier if it is more than 3 standard deviations away from average.
+
+- Class: test
+  Output:  So our data has one outlier and that doesn't necessarily rule out the normal distribution as model for this data.  Look a little closer to determine just how extreme this outlier is.  To do this we can find the z-score of the maximum female systolic blood pressure. 
+
+- Class: text
+  Output: To find the z-score for the smallest observation in you could type (min(fs)-mean(fs))/sd(fs) to get -1.55.  So the smallest female systolic blood pressure is not unusually small (think of the 68-95-99.7 rule)
+
+- Class: cmd_question
+  Output: Compute the z-score for the maximum female systolic blood pressure.
+  CorrectAnswer: (max(fs)-mean(fs))/sd(fs)
+  AnswerTests: omnitest(correctExpr="(max(fs)-mean(fs))/sd(fs)",correctVal=z)
+  Hint: Use the same syntax as for finding the z-score of the smallest observation except change min to max.
+
+- Class: text
+  Output:  So the maximum observation is about 3.43 standard deviation above average.  You need to determine if this would be unusual in a normal distribution.
+
+- Class: text
+  Output:  For instance to compute the probability that a randomly sampled observation from a normal distribution is at least 2.7 standard deviations away from average, in either direction, we could use 2*pnorm( -2.7) to get 0.00693.  The factor of 2 is to compute the total probability in the lower and upper tails.
+
+- Class: cmd_question
+  Output: Use pnorm to compute the probability of an observation at least 3.43 standard deviations away from average in a normal distribution.
+  CorrectAnswer: 2*pnorm(-3.43)
+  AnswerTests: omnitest(correctExpr='2*pnorm(-3.43)', correctVal=p)
+  Hint: Type 2*pnorm(-3.43)
+
+- Class: text
+  Output:  So the probability is about 0.0006.  So in 40 observations from a normal distribution we would expect, on average 40*0.0006 or 0.024 oberservations that are at least 3.43 standard deviations away from the mean.  So our maximum blood pressure that is 3.43 observations above average would be very unusual if this data came from a normal distribution.  This suggests the normal distribution isn't a good fit.
+
+- Class: text
+  Output:  Besides inspecting outliers, another useful tool for testing normality is a histogram.  Particularly if you have at least 20 or 30 observations.  
+
+- Class: cmd_question
+  Output: Type, or cut and paste, the command hist(fs) to get a quick histogram.  
+  CorrectAnswer: hist(fs)
+  AnswerTests: omnitest(correctExpr='hist(fs)')
+  Hint: type hist(fs)
+
+- Class: mult_question
+  Output: Based on the histogram how would you describe the distribution of the data?
+  AnswerChoices: its symmetric and mound-shaped; its skewed to the left; its skewed to the right
+  CorrectAnswer: ts skewed to the right
+  AnswerTests: omnitest(correctVal='its skewed to the right')
+  Hint: The right side has a longer tail ...
+
+- Class: text
+  Output:  Since the distribution of female systolic blood pressure has some clear skewness, a normal distribution is not a good model for this data.
+
+- Class: text
+  Output:  At this point you've got plenty of evidence to suggest that the normal distribution is not a good fit for the female systolic blood pressure data, but there is one more commonly used tool called the normal probability plot.  Some people like these plots because they think it is easier to judge than a histogram.  
+
+
+- Class: cmd_question
+  Output: Type qqnorm(fs) to see a normal probability plot for the female systolic blood pressure data.  Don't worry about adding labels and such at the moment.
+  CorrectAnswer: qqnorm(fs)
+  AnswerTests: omnitest(correctExpr='qqnorm(fs)')
+  Hint: Type qqnorm(fs)
+
+- Class: cmd_question
+  Output: Type qqline(fs) to add a fit line to the data.
+  CorrectAnswer: qqline(fs)
+  AnswerTests: omnitest(correctExpr='qqline(fs)')
+  Hint: Type qqline(fs)
+
+- Class: text
+  Output: In a normal probablity plot, if the data is from a normal distribution the points should lie more or less along a line with some possible random deviations up and down.  In this case, however, there are systematic differences from the line at both ends.
+
+- Class: text
+  Output: At the low end of the data, the points lie above the line indicating that the data is larger, or to the right of, what is expected for a data from a normal distribution.  Since the data is to the right of where it should be, that is an indication that th e lower tail is shorter than it should be.
+
+- Class: text
+  Output:  At the high end of the data, again the points are above the line indicating a tail that is too long on the right end of the data.  Taken together, this illustrates the right skewness of the data.  Moreover, since the line is a poor fit to the points, this suggests that the normal distribution is a poor fit for the female systolic blood pressure data.
+
+- Class: figure
+  Output: Now have a quick look at the female diastolic blood pressure data.  I'll do the work so you can just observe how things look.  First a boxplot to look for outliers.
+  Figure: boxplot1.R
+  FigureType: new
+
+- Class: text
+  Output: There are no outliers.  Moreover, we can see that the data looks symmetric. 
+
+- Class: figure
+  Output: To see if the data is mound-shaped use a histogram. 
+  Figure: histogram2.R
+  FigureType: new
+
+- Class: text
+  Output:  You can see that the data is mound-shaped and symmetric.  The density curve shows that the normal distribution is a reasonably good fit.
+
+- Class: text
+  Output:  In case you are wondering, here are the two commands used to produce this plot.  First, hist(fd,main="female systolic blood pressure",xlab="mmHg",prob=TRUE).  Second, curve(dnorm(x, mean=mean(fs), sd=sd(fs)),col="darkblue", lwd=2, add=TRUE)
+
+- Class: figure
+  Output: It can be hard to tell from a histogram is the tails are too long or too short, a normal probability plot can help.
+  Figure: qqnorm1.R
+  FigureType: new
+
+- Class: text
+  Output:  The points mostly fall right along the line suggesting a normal distribution is a good fit for the female diastolic blood pressure data.  The gaps between points are because all the data has been rounded to the nearest integer and there are multiples of many of the measurements Later in the course you'll learn about an inference test called the Shapiro Wilk test for normality that will confirm the descriptive statistics normality testing you've done here.

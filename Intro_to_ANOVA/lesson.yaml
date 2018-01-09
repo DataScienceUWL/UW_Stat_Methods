@@ -1,0 +1,153 @@
+- Class: meta
+  Course: DS705
+  Lesson: Intro_to_ANOVA
+  Author: Dave Reineke
+  Type: Standard
+  Organization: University of Wisconsin - La Crosse
+  Version: 2.2.0
+
+#1
+- Class: text
+  Output: This lesson will introduce the one-way analysis of variance hypothesis test for a completely randomized design. 
+
+#2
+- Class: text
+  Output: The completely randomized design is one in which independent, random samples are drawn from each population of interest. The inference procedure for comparing two or more unknown population means is called analysis of variance (ANOVA or AOV).
+
+#3
+- Class: text
+  Output: The HealthExam data set contains the body mass index (BMI) for independent, random samples of adults selected from 4 geographic regions in the US.  Suppose we need to compare the mean BMI for the populations of adults in the 4 geographic regions.  ANOVA would be the right tool for the job.
+
+#4
+- Class: cmd_question
+  Output: In the HealthExam data set, the variable called BodyMass contains the BMI for each individual in the sample and the variable Region contains the indicator for the geographic region.  In order to avoid having to specify the data set for each command, you can use the 'attach' function so that the commands you enter in R will automatically be applied to that data set without explicitly specifying it in the R code.  Enter attach(HealthExam) at the command prompt to do this now.
+  CorrectAnswer: attach(HealthExam)
+  AnswerTests:  omnitest(correctExpr='attach(HealthExam)')
+  Hint: Enter attach(HealthExam) at the command prompt
+
+#5
+- Class: cmd_question
+  Output: It's good practice to look at data to visualize what might be happening before conducting a statistical inference procedure like an ANOVA.  Construct side-by-side boxplots of BodyMass by Region by entering the correct R code at the command prompt. Do this now.
+  CorrectAnswer: boxplot(BodyMass~Region)
+  AnswerTests:  omnitest(correctExpr='boxplot(BodyMass~Region)')
+  Hint: Enter boxplot(BodyMass~Region) at the command prompt
+
+#6
+- Class: mult_question
+  Output: Take a look a the boxplots in the Plots window. Do the distributions all look approximately symmetric?
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: This is a subjective 'opinion' question, but try not to be too nit-picky.  We'll test the residuals for normality later.
+
+#7
+- Class: mult_question
+  Output: Take a look a the boxplots in the Plots window. Do the distributions all look like they have approximately the same variance?  (Compare the spread vertically for boxplots oriented vertically like these)
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: This is also a subjective 'opinion' question, but try not to be too nit-picky.  We'll test this later.
+
+#8
+- Class: text
+  Output: Take a look a the boxplots in the Plots window. Though the centers of the boxplots are based on the medians, do the distributions all look like they have approximately the same central values?  This is also a subjective 'opinion' question, but we'll test this with the ANOVA next.
+
+
+#9
+- Class: cmd_question
+  Output: Let's get to the ANOVA.  One R function to produce the computations for an analysis of variance is aov().  In order to store these computations so that we can display various parts of interest, we assign the output to a new object.  Something like the following code is common.  fit <- aov(BodyMass~Region)   Enter this at the command prompt.
+  CorrectAnswer: fit <- aov(BodyMass~Region)
+  AnswerTests:  omnitest(correctExpr='fit <- aov(BodyMass~Region)')
+  Hint: Type aov(fit <- aov(BodyMass~Region)) at the command prompt.
+
+#9
+- Class: cmd_question
+  Output: To display the ANOVA table, enter summary(fit) at the command prompt.
+  CorrectAnswer: summary(fit)
+  AnswerTests:  omnitest(correctExpr='summary(fit)')
+  Hint: Type or paste summary(fit) at the command prompt.
+
+#10
+- Class: mult_question
+  Output: What is the value of the test statistic given in the ANOVA table?
+  AnswerChoices: 2.383; 55.68; 0.0759; 23.37; 1776; 167
+  CorrectAnswer: 2.383
+  AnswerTests: omnitest(correctVal='2.383')
+  Hint: The test statistic is also called the F statistic.
+
+#11
+- Class: mult_question
+  Output: What is the value of the p-value given in the ANOVA table?
+  AnswerChoices: 2.383; 55.68; 0.0759; 23.37; 1776; 167
+  CorrectAnswer: 0.0759
+  AnswerTests: omnitest(correctVal='0.0759')
+  Hint: The p-value is a probability.
+
+#12
+- Class: cmd_question
+  Output: To confirm that our ANOVA conditions are reasonably met, enter leveneTest(BodyMass~Region) at the command prompt to test for homoscedasticity.
+  CorrectAnswer: leveneTest(BodyMass~Region)
+  AnswerTests:  omnitest(correctExpr='leveneTest(BodyMass~Region)')
+  Hint: Type or paste leveneTest(BodyMass~Region) at the command prompt.
+
+#13
+- Class: text
+  Output: Does the outcome of the Levene test match your intuition about equal population variances gained from looking at the boxplots?  
+
+#14
+- Class: text
+  Output: If you thought the boxplots did not differ much in spread, then your assumption of equal variance is strongly supported by the Levene test, which failed to reject the null hypothesis equal variances (with quite a large p-value). 
+
+#15
+- Class: cmd_question
+  Output: The object we called fit contains the residuals for the ANOVA and a function called resid() will pull them out and we can assign them to their own vector so that we can look at plots and get a Shapiro-Wilk test for normality.  Enter res=resid(fit) at the command prompt.
+  CorrectAnswer: res=resid(fit)
+  AnswerTests:  omnitest(correctExpr='res=resid(fit)')
+  Hint: Type or paste res=resid(fit) at the command prompt.
+
+#16
+- Class: cmd_question
+  Output: Create a histogram of residuals.
+  CorrectAnswer: hist(res)
+  AnswerTests:  omnitest(correctExpr='hist(res)')
+  Hint: Type or paste hist(res) at the command prompt.
+
+#17
+- Class: cmd_question
+  Output: Create a boxplot of residuals.
+  CorrectAnswer: boxplot(res)
+  AnswerTests:  omnitest(correctExpr='boxplot(res)')
+  Hint: Type or paste boxplot(res) at the command prompt.
+
+#18
+- Class: cmd_question
+  Output: Enter qqnorm(res) to create a normal probability plot of residuals with a comparison line in it.
+  CorrectAnswer: qqnorm(res)
+  AnswerTests:  omnitest(correctExpr='qqnorm(res)')
+  Hint: Type or paste qqnorm(res) at the command prompt.
+
+#19
+- Class: cmd_question
+  Output: Enter qqline(res) to add a comparison line to the normal probability plot.
+  CorrectAnswer: qqline(res)
+  AnswerTests:  omnitest(correctExpr='qqline(res)')
+  Hint: Type or paste qqline(res) at the command prompt.
+
+#20
+- Class: text
+  Output: What do you think?  How do you feel about assuming at least approximate normality after viewing these plots?  (this is another opinion question, so I won't ask you to type in your answer . . .just hit return)
+
+#21
+- Class: cmd_question
+  Output: Test the residuals for normality using the Shapiro-Wilk test.  
+  CorrectAnswer: shapiro.test(res)
+  AnswerTests:  omnitest(correctExpr='shapiro.test(res)')
+  Hint: Type or paste shapiro.test(res) at the command prompt.
+
+#22
+- Class:  text
+  Output:  How do you feel about the validity of the ANOVA results here?  Can we trust them if all of the data conditions are not met?  In a future lesson we'll talk about our options.
+
+#23
+- Class:  text
+  Output:  There are a number of ways to conduct an analysis of variance procedure in R, so as you surf the web you'll see other ways to do what we've done here, but this should be a good start!

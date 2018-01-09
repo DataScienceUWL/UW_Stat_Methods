@@ -1,0 +1,1 @@
+boxplot(fd,main='female diastolic blood pressure',ylab="mmHg")

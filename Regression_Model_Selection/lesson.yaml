@@ -1,0 +1,189 @@
+- Class: meta
+  Course: DS705
+  Lesson: Regression Model Selection
+  Author: Dave Reineke
+  Type: Standard
+  Organization: University of Wisconsin - La Crosse
+  Version: 2.2.0
+
+#1
+- Class: text
+  Output: Let's look at some of the basic tools for model selection in regression.  The HealthExam data set has been loaded and will be used to demonstrate a number of functions useful in multiple regression.  (Recall, you can type 'skip()' at any time to bypass a task, enter play() to put swirl on hold and experiment in R for while, enter nxt() to get back to the lesson).
+
+#2
+- Class: cmd_question
+  Output: Consider the first order linear model and store the output in an object, enter fit <- lm(Weight~Height+Waist+SysBP,HealthExam) at the command prompt.  
+  CorrectAnswer: fit <- lm(Weight~Height+Waist+SysBP,HealthExam)
+  AnswerTests:  omnitest(correctExpr='fit <- lm(Weight~Height+Waist+SysBP,HealthExam)')
+  Hint: Type or paste fit <- lm(Weight~Height+Waist+SysBP,HealthExam) at the command prompt.
+
+#3
+- Class: cmd_question
+  Output: To see the output for this model, enter summary(fit) at the command prompt.  You may need to scroll up to check out the p-values for each coefficient, the Multiple R-squared, and the Adjusted R-squared.  I love this part!
+  CorrectAnswer: summary(fit)
+  AnswerTests:  omnitest(correctExpr='summary(fit)')
+  Hint: Type summary(fit) at the command prompt.
+
+#4
+- Class: cmd_question
+  Output: Enter vif(fit) to see the Variance Inflation Factors.  This function requires the package HH, which was installed with this lesson (meaning that you would need to install it on your machine to use outside of this lesson).
+  CorrectAnswer: vif(fit)
+  AnswerTests:  omnitest(correctExpr='vif(fit)')
+  Hint: Type vif(fit) at the command prompt.
+
+#5
+- Class: mult_question
+  Output: Are all of the VIFs under 10?  
+  AnswerChoices: yes; no
+  CorrectAnswer: yes
+  AnswerTests: omnitest(correctVal='yes')
+  Hint: This should be an easy one.
+
+#6
+- Class: cmd_question
+  Output: Create some standard residual plots, which are good for assessing model assumptions.  Enter plot(fit) at the command prompt.  You'll be asked to hit <Return> to display each plot in turn.  
+  CorrectAnswer: plot(fit)
+  AnswerTests:  omnitest(correctExpr='plot(fit)')
+  Hint: Type plot(fit) at the command prompt.
+
+#7
+- Class: cmd_question
+  Output: Hypothesis test can be used on residuals to assess model assumptions.  For example, to test the residuals for normality enter shapiro.test(fit$resid) at the command prompt.
+  CorrectAnswer: shapiro.test(fit$resid)
+  AnswerTests:  omnitest(correctExpr='shapiro.test(fit$resid)')
+  Hint: Enter shapiro.test(fit$resid) at the command prompt. 
+
+#8
+- Class: cmd_question
+  Output: Enter bptest(fit) to conduct the Bruesch-Pagan test for homogeneity of variance among the residuals.  This function requires the package lmtest, which was also installed with this lesson.
+  CorrectAnswer: bptest(fit)
+  AnswerTests:  omnitest(correctExpr='bptest(fit)')
+  Hint: Type bptest(fit) at the command prompt.
+
+#9
+- Class: mult_question
+  Output: At a 5% level of significance, does this test indicate that the error variances are not constant, as the model assumptions dictate?
+  AnswerChoices: yes; no
+  CorrectAnswer: no
+  AnswerTests: omnitest(correctVal='no')
+  Hint: Since the p-value is greater than 0.05, the null hypothesis of homogeneity is not rejected.
+
+#10
+- Class: cmd_question
+  Output: Enter dwtest(fit) to conduct the Durbin-Watson test for serial correlation among the residuals.  This function also requires the package lmtest, which, as you know, was installed with this lesson.
+  CorrectAnswer: dwtest(fit)
+  AnswerTests:  omnitest(correctExpr='dwtest(fit)')
+  Hint: Enter dwtest(fit) at the command prompt.
+
+#11
+- Class: mult_question
+  Output: At a 5% level of significance, does this test indicate that the residuals are serially correlated (i.e. did the order of observations have some effect on the response)?
+  AnswerChoices: yes; no
+  CorrectAnswer: no
+  AnswerTests: omnitest(correctVal='no')
+  Hint: Since the p-value is greater than 0.05, the null hypothesis of serial independence is not rejected.
+
+#12
+- Class: text
+  Output: There are several tests and statistics to examine residuals, they are beyond the scope of this lesson.  There is really no substitute for an examination of the residual plots; looking for patterns, outliers, and influential observations.
+  
+#13
+- Class: cmd_question
+  Output: The AIC for the model that has been estimated can be produced by entering extractAIC(fit), at least in this case because we assigned the output to the object called "fit".  Do this for the linear model that we fit previously in this lesson. 
+  CorrectAnswer: extractAIC(fit)
+  AnswerTests:  omnitest(correctExpr='extractAIC(fit)')
+  Hint: Enter extractAIC(fit) at the command prompt.
+  
+#14
+- Class: text
+  Output: The second number is the AIC, which is particularly useful when comparing two models.  Lower is better.  
+
+#15
+- Class: text
+  Output: In fact, AIC is one of the criteria that is used in the automated stepwise model selection procedures in R.  Suppose we wanted to use the stepwise approach to find the best model to predict Weight from the variables in the data set.  
+  
+#16
+- Class: cmd_question
+  Output: We first must specify a "full" model - one that contains all of the potential independent variables under consideration.  This can be done by typing them individually in the model specification, or, if there are no extraneous variables in the data set and you are only interested in first order models, it can be specified easily as follows.  full <- lm(Weight~.,data=HealthExam)  Enter this at the command prompt. 
+  CorrectAnswer: full <- lm(Weight~.,data=HealthExam)
+  AnswerTests:  omnitest(correctExpr='full <- lm(Weight~.,data=HealthExam)')
+  Hint: Enter full <- lm(Weight~.,data=HealthExam) at the command prompt.
+  
+#17
+- Class: cmd_question
+  Output: Enter step(full,direction="backward") at the command prompt to conduct a backward stepwise search for the model with the lowest AIC. 
+  CorrectAnswer: step(full,direction="backward")
+  AnswerTests:  omnitest(correctExpr='step(full,direction="backward")')
+  Hint: Enter step(full,direction="backward") at the command prompt.
+
+#18
+- Class: text
+  Output: Whoa!  That's a lot of output!!  You'll definitely need to scroll back to see it all.  The last model printed is the stopping point and the one selected by this procedure. 
+  
+#19
+- Class: text
+  Output: The stepwise search for the model with the lowest AIC can be done "backward", "forward", or "both".  The default is "both".  
+
+#20
+- Class: cmd_question
+  Output: When stepping in the forward direction, a minimal null model must also be specified in addition to the upper limit of the models under consideration. The model with no predictors is easily specified as follows.  null <- lm(Weight~1,data=HealthExam)  Enter this at the command prompt. 
+  CorrectAnswer: null <- lm(Weight~1,data=HealthExam)
+  AnswerTests:  omnitest(correctExpr='null <- lm(Weight~1,data=HealthExam)')
+  Hint: Enter null <- lm(Weight~1,data=HealthExam) at the command prompt.
+
+#21
+- Class: cmd_question
+  Output: Enter step(null,scope=list(lower=null,upper=full),direction="forward") at the command prompt to conduct a forward stepwise search for the model with the lowest AIC. 
+  CorrectAnswer: step(null,scope=list(lower=null,upper=full),direction="forward")
+  AnswerTests:  omnitest(correctExpr='step(null,scope=list(lower=null,upper=full),direction="forward")')
+  Hint: Enter step(null,scope=list(lower=null,upper=full),direction="forward") at the command prompt.
+  
+#22
+- Class: text
+  Output: There are two main functions that compute AIC in R. AIC(model) and extractAIC(model) will return different values; they are offset by a constant.  When using AIC for comparing models, you can use either function, so long as you don't mix them together (e.g. don't use AIC(model1) and extractAIC(model2) and try to make a comparison).  However, AIC(model1)-AIC(model2) = extractAIC(model1)-extractAIC(model2).  The AIC computation given in step() is the same as extractAIC(). 
+
+
+#23
+- Class: cmd_question
+  Output: Another automated model selection procedure in R is one that checks all models with a given number of predictors and ranks them within each subset.  For this example, begin the procedure by entering allmods <- regsubsets(Weight~.,nvmax=4,data=HealthExam) at the command prompt.
+  CorrectAnswer: allmods <- regsubsets(Weight~.,nvmax=4, data=HealthExam)
+  AnswerTests:  omnitest(correctExpr='allmods <- regsubsets(Weight~.,nvmax=4,data=HealthExam)')
+  Hint: Enter allmods <- regsubsets(Weight~.,nvmax=4,data=HealthExam) at the command prompt.
+  
+#24
+- Class: cmd_question
+  Output: To see some results enter summary(allmods) at the command prompt.
+  CorrectAnswer: summary(allmods)
+  AnswerTests:  omnitest(correctExpr='summary(allmods)')
+  Hint: Enter summary(allmods) at the command prompt.
+
+#25
+- Class: text
+  Output: In each row, the variables with the asterisks are the ones that produces the "best" model with the number of independent variables corresponding to the row number. 
+  
+#26
+- Class: cmd_question
+  Output: To see results based on the Adjusted R-square enter summary(allmods)$adjr2 at the command prompt.
+  CorrectAnswer: summary(allmods)$adjr2
+  AnswerTests:  omnitest(correctExpr='summary(allmods)$adjr2')
+  Hint: Enter summary(allmods)$adjr2 at the command prompt.
+
+#27
+- Class: text
+  Output: No frills output here.  The numbers are the Adjusted R-square values for each of the 4 models, in order.
+  
+#28
+- Class: cmd_question
+  Output: To see a cool summary plot that identifies models based on the Adjusted R-square enter plot(allmods, scale="adjr2") at the command prompt.
+  CorrectAnswer: plot(allmods, scale="adjr2")
+  AnswerTests:  omnitest(correctExpr='plot(allmods, scale="adjr2")')
+  Hint: Enter plot(allmods, scale="adjr2") at the command prompt.
+
+#29
+- Class: text
+  Output: The variable darkened in each row are the ones entered into the top model for that number of predictors. Mallow's Cp and Schwart's Information Criterion (BIC) is produced in the regsubsets function as well.  When this lesson is over, type ?regsubsets and also ?step to read more about these automated procedures.
+
+#30
+- Class: text
+  Output: And we have come to the end of yet another magnificent lesson.  Later!
+

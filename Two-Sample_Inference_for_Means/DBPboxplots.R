@@ -1,0 +1,1 @@
+boxplot(DiasBP~Sex,data=HealthExam)
