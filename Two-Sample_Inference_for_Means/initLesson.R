@@ -11,9 +11,5 @@ require(DS705data)
 # load the HealthExam data set into memory
 data(HealthExam)
 
-#if (!require(car)){
-#  install.packages('car')
-#}
-
 x.m<- HealthExam$DiasBP[HealthExam$Sex=="M"]
 x.f<- HealthExam$DiasBP[HealthExam$Sex=="F"]
